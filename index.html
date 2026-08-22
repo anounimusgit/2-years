@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eu &amp; gabi — uma linha do tempo</title>
+<meta name="description" content="Dois anos, em fotos e conversas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Cormorant+Garamond:ital@0;1&family=Inter:wght@300;400;500;600&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+/* ===== tokens ===== */
+:root{
+  --bg: #0b0a0d;
+  --bg-soft: #131117;
+  --ink: #f1ece2;
+  --ink-dim: #a9a29a;
+  --accent: #d99a5b;
+  --accent-soft: #7a5a3a;
+  --line: rgba(217,154,91,0.25);
+  --shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  --serif: 'Playfair Display', 'Cormorant Garamond', serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+img{ max-width:100%; display:block; }
+
+/* ===== grain overlay ===== */
+.grain{
+  position: fixed; inset:0; pointer-events:none; z-index: 999;
+  opacity: 0.05; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ===== progress rail ===== */
+.progress-rail{
+  position: fixed; top:0; left:0; width:3px; height:100%;
+  background: rgba(255,255,255,0.05); z-index: 900;
+}
+.progress-fill{
+  width:100%; height:0%;
+  background: linear-gradient(180deg, var(--accent), var(--accent-soft));
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* ===== hero ===== */
+.hero{
+  position: relative;
+  min-height: 100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+  padding: 2rem;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute; inset:-10%;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(217,154,91,0.12), transparent 55%),
+    radial-gradient(circle at 75% 75%, rgba(122,90,58,0.15), transparent 50%),
+    var(--bg);
+  filter: blur(40px);
+  animation: drift 22s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{ transform: scale(1) translate(0,0); }
+  100%{ transform: scale(1.08) translate(-2%, 2%); }
+}
+.hero-eyebrow{
+  position:relative; letter-spacing: 0.25em; text-transform: uppercase;
+  font-size: 0.7rem; color: var(--accent); margin-bottom: 1.6rem;
+}
+.hero-sub{
+  position:relative; font-style: italic; font-family: var(--serif);
+  color: var(--ink); font-size: clamp(2rem, 6vw, 3.4rem); margin-top: 0; font-weight: 500;
+}
+.scroll-cue{
+  position: relative; margin-top: 4rem; font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink-dim);
+  display:flex; flex-direction:column; align-items:center; gap: 0.6rem;
+}
+.scroll-cue span{
+  width:1px; height: 40px; background: linear-gradient(var(--accent), transparent);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{ opacity:0.3; } 50%{ opacity:1; } }
+
+/* ===== timeline layout ===== */
+.timeline{
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6rem 1.5rem;
+}
+.timeline::before{
+  content:"";
+  position:absolute; left:50%; top:0; bottom:0; width:1px;
+  background: linear-gradient(180deg, transparent, var(--line) 8%, var(--line) 92%, transparent);
+  transform: translateX(-50%);
+}
+
+.entry{
+  position: relative;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  align-items:center;
+  margin-bottom: 8rem;
+  opacity:0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.entry.is-visible{ opacity:1; transform: translateY(0); }
+
+.entry::after{
+  content:"";
+  position:absolute; left:50%; top:50%; width:9px; height:9px;
+  border-radius:50%; background: var(--accent);
+  box-shadow: 0 0 0 4px var(--bg), 0 0 16px var(--accent);
+  transform: translate(-50%,-50%);
+}
+
+.entry--right .entry-photo{ order:2; }
+.entry--right .entry-card{ order:1; text-align:right; }
+.entry--left .entry-photo{ order:1; }
+.entry--left .entry-card{ order:2; }
+
+.entry--center{ grid-template-columns: 1fr; justify-items:center; text-align:center; }
+.entry--center .entry-card{ max-width: 640px; }
+.entry--center::after{ display:none; }
+
+.entry-date{
+  display:inline-block; font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+}
+.entry-title{
+  font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3vw, 2.1rem);
+  margin: 0 0 0.9rem 0; text-transform: lowercase;
+}
+.entry-text{ color: var(--ink-dim); font-size: 1rem; font-weight: 300; margin:0; }
+
+.entry-photo{ position: relative; }
+.entry-photo--pair{ display:grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+
+.photo-frame{
+  position: relative;
+  overflow:hidden;
+  border-radius: 4px;
+  aspect-ratio: 4/5;
+  background: var(--bg-soft);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: zoom-in;
+}
+.photo-frame img{
+  width:100%; height:100%; object-fit: cover;
+  transition: transform 0.6s ease, filter 0.6s ease;
+  filter: saturate(0.9) contrast(1.03);
+}
+.photo-frame:hover img{ transform: scale(1.05); filter: saturate(1.05) contrast(1.05); }
+
+.photo-frame.missing{
+  display:flex; align-items:center; justify-content:center;
+  border: 1px dashed var(--line); cursor: default;
+}
+.photo-frame.missing img{ display:none; }
+.missing-label{
+  display:none;
+  text-align:center; font-size: 0.75rem; color: var(--ink-dim); padding: 1rem;
+  line-height: 1.6;
+}
+.photo-frame.missing .missing-label{ display:block; }
+.missing-label code{
+  color: var(--accent); font-family: monospace; font-size: 0.7rem;
+}
+
+.entry--milestone .photo-frame{ aspect-ratio: 3/4; }
+.entry--milestone .entry-title{ color: var(--accent); }
+
+.entry--transition{ margin-bottom: 4rem; }
+.entry--transition .entry-title{ font-style: italic; }
+
+/* ===== chat section ===== */
+.chat-section{
+  max-width: 640px; margin: 4rem auto 8rem; padding: 0 1.5rem;
+  opacity:0; transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.chat-section.is-visible{ opacity:1; transform: translateY(0); }
+.chat-header{ text-align:center; margin-bottom: 2.5rem; }
+
+.chat-window{
+  background: var(--bg-soft);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 1.8rem 1.4rem;
+  display:flex; flex-direction:column; gap: 0.6rem;
+  box-shadow: var(--shadow);
+}
+.chat-bubble{
+  max-width: 78%;
+  padding: 0.6rem 1rem;
+  border-radius: 16px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  opacity:0; transform: translateY(10px) scale(0.98);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.chat-bubble.is-visible{ opacity:1; transform: translateY(0) scale(1); }
+
+.chat-bubble.me{
+  align-self:flex-end;
+  background: linear-gradient(135deg, var(--accent-soft), #5c4128);
+  color: var(--ink);
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble.them{
+  align-self:flex-start;
+  background: #1e1c22;
+  color: var(--ink);
+  border-bottom-left-radius: 4px;
+}
+
+/* ===== nota pessoal ===== */
+.entry--note{ margin-top: -3rem; }
+.note-card{
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 3rem 2.5rem;
+  position: relative;
+}
+.note-mark{ font-size: 1.6rem; display:block; margin-bottom: 1rem; }
+.note-text{
+  font-family: 'Special Elite', 'Courier New', monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  line-height: 2;
+  color: var(--ink);
+}
+
+/* ===== diario quote ===== */
+.diary-quote{
+  max-width: 640px; margin: -2rem auto 6rem; padding: 0 1.5rem;
+  text-align:center;
+  opacity:0; transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.diary-quote.is-visible{ opacity:1; transform: translateY(0); }
+.diary-quote p{
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(1.3rem, 3vw, 1.7rem); color: var(--ink);
+  margin: 0 0 1rem 0; line-height: 1.5;
+  padding-top: 2rem; border-top: 1px solid var(--line);
+  display:inline-block;
+}
+.diary-quote-date{
+  display:block; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+/* ===== counter ===== */
+.counter-section{
+  text-align:center; padding: 4rem 1.5rem 8rem;
+  max-width: 800px; margin: 0 auto;
+}
+.counter-label{
+  letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.7rem;
+  color: var(--accent); margin-bottom: 2.5rem;
+}
+.counter-numbers{
+  display:flex; flex-wrap: wrap; justify-content:center; gap: 3rem;
+}
+.counter-item{ display:flex; flex-direction:column; align-items:center; gap: 0.4rem; }
+.counter-value{
+  font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 3.2rem); font-weight: 600;
+  color: var(--ink);
+}
+.counter-caption{ font-size: 0.8rem; color: var(--ink-dim); max-width: 160px; }
+
+/* ===== footer ===== */
+.site-footer{
+  text-align:center; padding: 3rem 1.5rem; color: var(--ink-dim);
+  font-size: 0.75rem; letter-spacing: 0.05em; border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== lightbox ===== */
+.lightbox{
+  position: fixed; inset:0; background: rgba(5,4,6,0.94);
+  display:none; align-items:center; justify-content:center;
+  z-index: 1000; padding: 3rem;
+}
+.lightbox.is-open{ display:flex; }
+.lightbox img{ max-width: 90vw; max-height: 88vh; border-radius: 6px; box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
+.lightbox-close{
+  position: absolute; top: 1.5rem; right: 2rem;
+  background:none; border:none; color: var(--ink); font-size: 2.2rem;
+  cursor:pointer; line-height:1;
+}
+
+/* ===== responsive ===== */
+@media (max-width: 820px){
+  .entry{ grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 5rem; }
+  .entry--right .entry-photo, .entry--left .entry-photo{ order:1; }
+  .entry--right .entry-card, .entry--left .entry-card{ order:2; text-align:left; }
+  .entry::after{ left: 1.4rem; }
+  .timeline::before{ left: 1.4rem; }
+  .timeline{ padding: 4rem 1.5rem 4rem 3rem; }
+  .entry--center{ padding-left: 0; }
+  .note-card{ padding: 2rem 1.4rem; }
+  .chat-bubble{ max-width: 88%; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">25 de agosto de 2024 — 25 de agosto de 2026</p>
+  <p class="hero-sub">uma linha do tempo de dois anos</p>
+  <div class="scroll-cue"><span></span>role</div>
+</header>
+
+<main class="timeline" id="timeline">
+
+  <!-- INTRO -->
+  <section class="entry entry--center" data-date="25 ago 2024">
+    <div class="entry-card">
+      <span class="entry-date">25 de agosto de 2024</span>
+      <h2 class="entry-title">o começo</h2>
+      <p class="entry-text">
+        Foi o dia que demos match pela segunda vez, diga-se de passagem, e começamos
+        a conversar — mal sabíamos que nunca mais pararíamos (ou quase nunca).
+      </p>
+    </div>
+  </section>
+
+  <!-- SAO PAULO -->
+  <section class="entry entry--right" data-date="11 set 2024">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="01_2024-09-11_sao-paulo-ousada.jpg" alt="Foto ousada em São Paulo" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">11 de setembro de 2024</span>
+      <h2 class="entry-title">são paulo, e a foto ousada</h2>
+      <p class="entry-text">Viajei com meus amigos e, em algum momento da noite, decidi ser ousada e te mandar aquela foto embaixo do letreiro de neon.</p>
+    </div>
+  </section>
+
+  <!-- TETRIS COM O RAFA -->
+  <section class="entry entry--left" data-date="16 nov 2024">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="33_2024-11-16_tetris-rafa.jpg" alt="Jogando Tetris com o Rafa" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">16 de novembro de 2024</span>
+      <h2 class="entry-title">jogando tetris com o rafa</h2>
+      <p class="entry-text">Nenhum dos dois gostava do jogo, mas olha os dois aí jogando.</p>
+    </div>
+  </section>
+
+  <!-- AQUARIO -->
+  <section class="entry entry--right" data-date="30 nov 2024">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="05_2025-01-27_aquario.jpg" alt="Aquário com os pais" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">30 de novembro de 2024</span>
+      <h2 class="entry-title">aquário com os meus pais</h2>
+      <p class="entry-text">O dia engraçado do aquário, meus pais adoraram você.</p>
+    </div>
+  </section>
+
+  <!-- APARTAMENTO -->
+  <section class="entry entry--left" data-date="18 dez 2024">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="03_2024-12-18_apartamento.jpg" alt="Arrumando o apartamento" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">18 de dezembro de 2024</span>
+      <h2 class="entry-title">arrumando o apartamento</h2>
+      <p class="entry-text">Você veio no apartamento ajudar a organizar. Também, mal sabíamos o que iríamos viver ali.</p>
+    </div>
+  </section>
+
+  <!-- LUDO COM A MAE -->
+  <section class="entry entry--right" data-date="início de 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="09_ludo_mae.jpg" alt="Jogando Ludo com a mãe dela" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">sem data marcada</span>
+      <h2 class="entry-title">ludo com a sua mãe</h2>
+      <p class="entry-text">Apesar dos apesares, esses pequenos momentos eram bem legais com a sua mãe.</p>
+    </div>
+  </section>
+
+  <!-- ALIANCAS -->
+  <section class="entry entry--left entry--milestone" data-date="13 jan 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="04_2025-01-13_aliancas.jpg" alt="Alianças de namoro" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">13 de janeiro de 2025</span>
+      <h2 class="entry-title">as alianças</h2>
+      <p class="entry-text">O dia em que comprei as nossas alianças de namoro. Eu estava muito nervosa pra fazer o pedido.</p>
+    </div>
+  </section>
+
+  <!-- SHOW LUDMILLA -->
+  <section class="entry entry--right" data-date="27 jan 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="06_2025-01-27_ludmilla.jpg" alt="Show da Ludmilla" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">27 de janeiro de 2025</span>
+      <h2 class="entry-title">show da ludmilla</h2>
+      <p class="entry-text">Eu nem queria ir nesse show rsrs mas eu queria muito estar com você.</p>
+    </div>
+  </section>
+
+  <!-- JANTAR ALEATORIO -->
+  <section class="entry entry--left entry--milestone" data-date="22 fev 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="07_2025-02-22_casal.jpg" alt="Uma saída pra jantar aleatória" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">22 de fevereiro de 2025</span>
+      <h2 class="entry-title">uma saída pra jantar aleatória</h2>
+      <p class="entry-text">Eu gosto dessa foto.</p>
+    </div>
+  </section>
+
+  <!-- PEDAL -->
+  <section class="entry entry--right" data-date="08 mar 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="08_bike.jpg" alt="Pedal" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">8 de março de 2025</span>
+      <h2 class="entry-title">pedal</h2>
+      <p class="entry-text">Suadas e rindo.</p>
+    </div>
+  </section>
+
+  <!-- RAFA PESCAR -->
+  <section class="entry entry--left" data-date="19 abr 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="17_2025-04-19_rafa-pescar.jpg" alt="Rafa pescando" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">19 de abril de 2025</span>
+      <h2 class="entry-title">levamos o rafa pra pescar</h2>
+      <p class="entry-text">Um dia de família bem legal eu diria.</p>
+    </div>
+  </section>
+
+  <!-- PIZZA -->
+  <section class="entry entry--right">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="13_pizza.jpg" alt="Fazendo pizza" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">sem data marcada</span>
+      <h2 class="entry-title">pizza enquanto você estava na aula</h2>
+      <p class="entry-text">Eu fazendo uma das receitas que você me ensinou: pizza de portuguesa e de coração.</p>
+    </div>
+  </section>
+
+  <!-- ADOCAO GATO -->
+  <section class="entry entry--right entry--milestone" data-date="31 out 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="18_2025-10-31_adocao-gato.jpg" alt="Dia da adoção" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">31 de outubro de 2025</span>
+      <h2 class="entry-title">adotamos o nosso gato</h2>
+      <p class="entry-text">"O casamento só se oficializa quando adota um pet junto" — você disse, brincando. Mas a gente foi, e adotou. E virou nosso, de verdade.</p>
+    </div>
+  </section>
+
+  <!-- CASAL2 -->
+  <section class="entry entry--left">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="15_casal2.jpg" alt="Uma noite qualquer" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">sem data marcada</span>
+      <h2 class="entry-title">uma noite qualquer</h2>
+      <p class="entry-text">Nenhuma data marcada pra essa. Só mais uma noite boa de tantas que a gente teve.</p>
+    </div>
+  </section>
+
+  <!-- GATO FEV 2026 -->
+  <section class="entry entry--right">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="14_2026-02-02_gato.jpg" alt="Ela com o nosso gato" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">2 de fevereiro de 2026</span>
+      <h2 class="entry-title">você e o nosso gatinho</h2>
+      <p class="entry-text">Um ano e meio depois do começo, e essa já era simplesmente a nossa vida.</p>
+    </div>
+  </section>
+
+  <!-- GATO DE LEGO -->
+  <section class="entry entry--left" data-date="19 jul 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="12_gato_lego.jpg" alt="Gato de lego" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">19 de julho de 2026</span>
+      <h2 class="entry-title">o gato de lego</h2>
+      <p class="entry-text">A gente querendo doar o neném, e 1 neném viraram 2, rsrsr.</p>
+    </div>
+  </section>
+
+  <!-- TRANSIÇÃO PARA O FIM -->
+  <section class="entry entry--center entry--transition">
+    <div class="entry-card">
+      <h2 class="entry-title">e então</h2>
+      <p class="entry-text">
+        Faltavam poucos dias pra completarmos dois anos quando você finalmente decidiu
+        terminar o relacionamento. E no fim, encontramos duas pessoas cansadas,
+        tentando ser honestas depois de muito tempo não sendo.
+      </p>
+    </div>
+  </section>
+
+  <!-- DIARIO DA OBSERVABILIDADE - INTRO -->
+  <section class="entry entry--center entry--transition" data-date="ago 2026">
+    <div class="entry-card">
+      <h2 class="entry-title">diário da observabilidade</h2>
+      <p class="entry-text">
+        Depois do término, eu comecei a escrever e tirar fotos da minha rotina, pra me
+        fazer sentir melhor e organizar pensamentos.
+      </p>
+    </div>
+  </section>
+
+  <!-- ACADEMIA 6 AGO -->
+  <section class="entry entry--right" data-date="06 ago 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="19_2026-08-06_academia.jpg" alt="Primeiro dia na academia" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">6 de agosto de 2026</span>
+      <h2 class="entry-title">primeiro dia na academia</h2>
+      <p class="entry-text">Voltar a me mexer, mesmo sem vontade nenhuma. Comecei por aí.</p>
+    </div>
+  </section>
+
+  <!-- CAFE COM OS PAIS 8 AGO -->
+  <section class="entry entry--left" data-date="08 ago 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="31_2026-08-08_cafe.jpg" alt="Café com meus pais" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">8 de agosto de 2026</span>
+      <h2 class="entry-title">café com meus pais</h2>
+      <p class="entry-text">Um domingo simples, na casa deles, sendo cuidada.</p>
+    </div>
+  </section>
+
+  <!-- PIPOCA 9 AGO -->
+  <section class="entry entry--right entry--milestone" data-date="09 ago 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="20_2026-08-09_pipoca.jpg" alt="Primeiro domingo à noite pós-término" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">9 de agosto de 2026</span>
+      <h2 class="entry-title">o primeiro domingo à noite</h2>
+      <p class="entry-text">Fiz pipoca na manteiga, servi uma taça, liguei a TV. Primeiro domingo sozinha.</p>
+    </div>
+  </section>
+
+  <!-- ACADEMIA 12 AGO -->
+  <section class="entry entry--left">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="21_2026-08-12_academia.jpg" alt="Indo pra academia" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">12 de agosto de 2026</span>
+      <h2 class="entry-title">indo pra academia, de novo</h2>
+      <p class="entry-text">Virando rotina, uma rotina que é só minha.</p>
+    </div>
+  </section>
+
+  <!-- ESTEIRA + PAI 13 AGO -->
+  <section class="entry entry--right">
+    <div class="entry-photo entry-photo--pair">
+      <div class="photo-frame">
+        <img src="24_2026-08-13_esteira.jpg" alt="Esteira todo dia na academia" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="23_2026-08-13_pai.jpg" alt="Caminhando com meu pai" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">13 de agosto de 2026</span>
+      <h2 class="entry-title">esteira e uma caminhada com o meu pai</h2>
+      <p class="entry-text">Todo dia um pouco. Nem sempre com vontade, mas fui.</p>
+    </div>
+  </section>
+
+  <!-- ALMOÇO + VOLEI 13 AGO -->
+  <section class="entry entry--left">
+    <div class="entry-photo entry-photo--pair">
+      <div class="photo-frame">
+        <img src="22_2026-08-13_almoco.jpg" alt="Almoço da segunda semana do término" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="25_2026-08-13_volei.jpg" alt="Tentando jogar vôlei de novo" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">13 de agosto de 2026</span>
+      <h2 class="entry-title">segunda semana, e um vôlei novo (e humilhante)</h2>
+      <p class="entry-text">A mão roxa e a humilhação desse dia foram intensas.</p>
+    </div>
+  </section>
+
+  <!-- BICEPS 1 - 16 AGO -->
+  <section class="entry entry--right entry--milestone" data-date="16 ago 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="26_2026-08-16_biceps1.jpg" alt="Primeira foto do bíceps" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">16 de agosto de 2026</span>
+      <h2 class="entry-title">primeira foto do bíceps</h2>
+      <p class="entry-text">Tinha que ter aqui né, o bíceps humilde.</p>
+    </div>
+  </section>
+
+  <!-- JANTINHA + ALMOÇO 17 AGO -->
+  <section class="entry entry--left">
+    <div class="entry-photo entry-photo--pair">
+      <div class="photo-frame">
+        <img src="27_2026-08-17_jantinha.jpg" alt="Fiz uma jantinha pra mim" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="28_2026-08-17_almoco.jpg" alt="Preparei meu almoço e ficou bom" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">17 de agosto de 2026</span>
+      <h2 class="entry-title">cozinhando pra mim</h2>
+      <p class="entry-text">No mesmo dia fiz meu almoço e uma receita do TikTok. Pior que ficou bom.</p>
+    </div>
+  </section>
+
+  <!-- PROGRESSO BICEPS + PRANCHA 19 AGO -->
+  <section class="entry entry--right entry--milestone" data-date="19 ago 2026">
+    <div class="entry-photo entry-photo--pair">
+      <div class="photo-frame">
+        <img src="29_2026-08-19_biceps2.jpg" alt="Progresso do bíceps" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="32_2026-08-19_prancha.png" alt="Recorde na prancha" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">19 de agosto de 2026</span>
+      <h2 class="entry-title">pequenas vitórias</h2>
+      <p class="entry-text">Bíceps em progresso, e o recorde da prancha foi de 35s pra 47s.</p>
+    </div>
+  </section>
+
+  <!-- PAI DE NOVO 20 AGO -->
+  <section class="entry entry--left">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="30_2026-08-20_pai2.jpg" alt="Almoçando com meu pai de novo" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">20 de agosto de 2026</span>
+      <h2 class="entry-title">almoçando com o meu pai, de novo</h2>
+      <p class="entry-text">Note que estou com o shorts de academia na foto hehe.</p>
+    </div>
+  </section>
+
+  <!-- CITACAO FINAL DO DIARIO -->
+  <section class="diary-quote">
+    <p>"Fazer tudo que eu quero não vai me deixar feliz."</p>
+    <span class="diary-quote-date">— de uma conversa com a Beth, 20 de agosto de 2026</span>
+  </section>
+
+  <!-- NOTA PESSOAL -->
+  <section class="entry entry--center entry--note">
+    <div class="entry-card note-card">
+      <p class="note-text">
+        Eu pensei que você nunca iria embora.<br>
+        Eu vi você se decepcionar.<br>
+        Vi você tentar conversar.<br>
+        Vi você pedir mudanças.<br>
+        Mais de uma vez.<br>
+        Eu me acomodei com a ideia de que você ficaria.<br>
+        Achei que o amor que você sentia era maior do que o desgaste.<br>
+        Achei que sempre haveria mais uma chance.<br>
+        Mais uma conversa.<br>
+        Mais um recomeço.<br>
+        Mais tempo.<br>
+        Até o dia em que não houve.<br>
+        E o que mais me dói hoje não é só ter te perdido.<br>
+        É perceber quantas oportunidades eu tive de fazer diferente.<br>
+        E quantas delas eu desperdicei acreditando que você nunca cansaria.
+        <br><br>
+        Eu sei o que eu fiz.<br>
+        Sei o quanto te magoei.<br>
+        E talvez pela primeira vez eu esteja olhando pra isso sem tentar me defender.<br>
+        Porque durante muito tempo eu transformei a sua dor em exagero<br>
+        drama cobrança<br>
+        sensibilidade demais.<br>
+        Foi mais fácil fazer isso do que admitir que eu estava te machucando.<br>
+        Hoje eu entendo o cansaço que eu via em você.<br>
+        Entendo o silêncio.<br>
+        A distância.<br>
+        E até a forma como você foi desistindo aos poucos.
+        <br><br>
+        Escrevo isso sabendo que faltavam só alguns dias pra completarmos dois anos.
+        Não sei se um dia a gente vai juntar os caquinhos, mas se acontecer, vai ser
+        porque as duas quiseram, sem pressa e sem prazo. Obrigada por esses dois anos.
+        Por tudo que eles me ensinaram sobre te amar, sobre errar, e sobre
+        recomeçar. Você está me fazendo ser um ser humano melhor do que eu já fui,
+        mesmo que você não veja acontecer.
+        <br><br>
+        P.S.: ainda amo você, sua bobalhona.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTADOR -->
+  <section class="counter-section">
+    <p class="counter-label">de 25 de agosto de 2024 a 25 de agosto de 2026</p>
+    <div class="counter-numbers">
+      <div class="counter-item">
+        <span class="counter-value" id="countTotal">0</span>
+        <span class="counter-caption">dias em dois anos inteiros</span>
+      </div>
+      <div class="counter-item">
+        <span class="counter-value" id="countTogether">0</span>
+        <span class="counter-caption">dias vividos juntas</span>
+      </div>
+      <div class="counter-item">
+        <span class="counter-value" id="countMissing">0</span>
+        <span class="counter-caption">dias que faltaram</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>feito com o que sobrou e com o que ficou · agosto de 2026</p>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
+  <img src="" alt="" id="lightboxImg">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ---- scroll reveal for entries ---- */
+  const revealTargets = document.querySelectorAll('.entry, .chat-section, .diary-quote');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  revealTargets.forEach(t => revealObserver.observe(t));
+
+  /* ---- staggered chat bubbles ---- */
+  const bubbles = document.querySelectorAll('.chat-bubble');
+  const bubbleObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(bubbles).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('is-visible'), (idx % 19) * 140);
+        bubbleObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  bubbles.forEach(b => bubbleObserver.observe(b));
+
+  /* ---- scroll progress rail ---- */
+  const progressFill = document.getElementById('progressFill');
+  const timeline = document.getElementById('timeline');
+  function updateProgress() {
+    const rect = timeline.getBoundingClientRect();
+    const total = timeline.offsetHeight - window.innerHeight;
+    const scrolled = Math.min(Math.max(-rect.top, 0), total);
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    progressFill.style.height = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---- lightbox ---- */
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  document.querySelectorAll('.photo-frame').forEach(frame => {
+    frame.addEventListener('click', () => {
+      if (frame.classList.contains('missing')) return;
+      const img = frame.querySelector('img');
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('is-open');
+    });
+  });
+  function closeLightbox() {
+    lightbox.classList.remove('is-open');
+    lightboxImg.src = '';
+  }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* ---- counters ---- */
+  const START = new Date(2024, 7, 25);   // 25 ago 2024
+  const END_FULL = new Date(2026, 7, 25); // 25 ago 2026 (2 anos completos)
+  const LAST_DAY = new Date(2026, 6, 31); // 31 jul 2026 (dia em que terminaram)
+
+  const dayMs = 1000 * 60 * 60 * 24;
+  const totalDays = Math.round((END_FULL - START) / dayMs);
+  const togetherDays = Math.round((LAST_DAY - START) / dayMs);
+  const missingDays = totalDays - togetherDays;
+
+  function animateCount(el, target, duration = 1400) {
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const counterSection = document.querySelector('.counter-section');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCount(document.getElementById('countTotal'), totalDays);
+        animateCount(document.getElementById('countTogether'), togetherDays);
+        animateCount(document.getElementById('countMissing'), missingDays);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  if (counterSection) counterObserver.observe(counterSection);
+
+});
+
+</script>
+</body>
+</html>
