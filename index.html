@@ -172,6 +172,29 @@ img{ max-width:100%; display:block; }
 }
 .photo-frame:hover img{ transform: scale(1.05); filter: saturate(1.05) contrast(1.05); }
 
+.photo-frame--contain,
+.entry--milestone .photo-frame.photo-frame--contain{
+  aspect-ratio:auto;
+  background:#09090b;
+}
+.photo-frame--contain img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  transform-origin:center center;
+}
+.photo-frame--contain:hover img{
+  transform:scale(1.025);
+  filter:saturate(1.02) contrast(1.04);
+}
+
+.entry-photo--quad{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:0.8rem;
+}
+.entry-photo--quad .photo-frame{ aspect-ratio:3/4; }
+
 .photo-frame.missing{
   display:flex; align-items:center; justify-content:center;
   border: 1px dashed var(--line); cursor: default;
@@ -342,6 +365,7 @@ img{ max-width:100%; display:block; }
   .entry--center{ padding-left: 0; }
   .note-card{ padding: 2rem 1.4rem; }
   .chat-bubble{ max-width: 88%; }
+  .entry-photo--quad{ gap:0.55rem; }
 }
 
 </style>
@@ -373,6 +397,21 @@ img{ max-width:100%; display:block; }
     </div>
   </section>
 
+
+  <!-- PRIMEIRO OI NO WHATSAPP -->
+  <section class="entry entry--left entry--milestone" data-date="30 ago 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="34_2024-08-30_primeiro-oi-whatsapp.webp" alt="Nosso primeiro oi no WhatsApp" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">30 de agosto de 2024</span>
+      <h2 class="entry-title">o primeiro oi no whatsapp</h2>
+      <p class="entry-text">Cinco dias depois do match, a conversa saiu do app e foi pro WhatsApp. Um “oii, oii =))” meio bobo, mas foi dali que a gente começou a ocupar o dia uma da outra.</p>
+    </div>
+  </section>
+
   <!-- SAO PAULO -->
   <section class="entry entry--right" data-date="11 set 2024">
     <div class="entry-photo">
@@ -384,6 +423,77 @@ img{ max-width:100%; display:block; }
       <span class="entry-date">11 de setembro de 2024</span>
       <h2 class="entry-title">são paulo, e a foto ousada</h2>
       <p class="entry-text">Viajei com meus amigos e, em algum momento da noite, decidi ser ousada e te mandar aquela foto embaixo do letreiro de neon.</p>
+    </div>
+  </section>
+
+
+  <!-- COISAS FOFAS SOBRE MIM -->
+  <section class="entry entry--left" data-date="16 set 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="35_2024-09-16_coisas-fofas-sobre-mim.webp" alt="Coisas que você escreveu sobre mim" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">16 de setembro de 2024</span>
+      <h2 class="entry-title">coisas que você gostava em mim</h2>
+      <p class="entry-text">Você fez uma lista do que te fazia gostar de conversar comigo: nossos interesses parecidos, o violão, as conversas, os sorrisos. Eu guardei porque já tinha alguma coisa muito bonita começando ali.</p>
+    </div>
+  </section>
+
+  <!-- PRIMEIRO DATE -->
+  <section class="entry entry--right entry--milestone" data-date="21 set 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="36_2024-09-21_primeiro-date.webp" alt="Conversa no dia do nosso primeiro date" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">21 de setembro de 2024</span>
+      <h2 class="entry-title">nosso primeiro date</h2>
+      <p class="entry-text">Eu disse que ia te buscar e você respondeu: “coloca felicidade que vai aparecer”. Foi o nosso primeiro date — e, olhando hoje, a frase ficou boa demais pra não guardar.</p>
+    </div>
+  </section>
+
+  <!-- COISAS FOFAS SOBRE VOCE -->
+  <section class="entry entry--left" data-date="24 set 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="37_2024-09-24_coisas-fofas-sobre-voce.webp" alt="Coisas que eu escrevi sobre você" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">24 de setembro de 2024</span>
+      <h2 class="entry-title">o que me fazia querer saber mais de você</h2>
+      <p class="entry-text">Eu te disse que o que mais me pegava era a forma como você me tratava: carinhosa, intensa e recíproca. Você me deixava confortável pra me abrir — e cada vez mais interessada em conhecer o resto.</p>
+    </div>
+  </section>
+
+  <!-- COM VOCE FOI DIFERENTE -->
+  <section class="entry entry--right" data-date="02 out 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="38_2024-10-02_com-voce-foi-diferente.webp" alt="Mensagem dizendo que comigo foi diferente" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">2 de outubro de 2024</span>
+      <h2 class="entry-title">“com você foi diferente”</h2>
+      <p class="entry-text">Eu disse que nunca tinha acreditado naquilo. Você respondeu só que comigo tinha sido diferente. Foi uma frase pequena, mas daquelas que ficam.</p>
+    </div>
+  </section>
+
+  <!-- COMO EU TE FAZIA SENTIR -->
+  <section class="entry entry--left entry--milestone" data-date="04 nov 2024">
+    <div class="entry-photo">
+      <div class="photo-frame photo-frame--contain">
+        <img src="39_2024-11-04_como-eu-te-fazia-sentir.webp" alt="Texto sobre como eu te fazia sentir" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">4 de novembro de 2024</span>
+      <h2 class="entry-title">como eu te fazia sentir</h2>
+      <p class="entry-text">Quando eu te perguntei como eu te fazia sentir, você escreveu sobre toque, cuidado, conexão, vontade de estar perto e de viver mais coisas juntas. Eu salvei porque parecia um retrato exato do que a gente estava virando.</p>
     </div>
   </section>
 
@@ -513,6 +623,24 @@ img{ max-width:100%; display:block; }
     </div>
   </section>
 
+
+  <!-- CHALE EM CAMPO ALEGRE -->
+  <section class="entry entry--right entry--milestone" data-date="25 abr 2025">
+    <div class="entry-photo entry-photo--pair">
+      <div class="photo-frame">
+        <img src="40_2025-04-25_chale-campo-alegre.webp" alt="Vista do chalé em Campo Alegre" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="41_2025-04-25_chale-interior.webp" alt="Dentro do chalé em Campo Alegre" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">25 de abril de 2025</span>
+      <h2 class="entry-title">o chalé em campo alegre</h2>
+      <p class="entry-text">Fomos pro chalé e tivemos um daqueles fins de semana que pareciam existir fora do resto do mundo. Vista bonita, casa de madeira e tempo só nosso.</p>
+    </div>
+  </section>
+
   <!-- PIZZA -->
   <section class="entry entry--right">
     <div class="entry-photo">
@@ -524,6 +652,21 @@ img{ max-width:100%; display:block; }
       <span class="entry-date">sem data marcada</span>
       <h2 class="entry-title">pizza enquanto você estava na aula</h2>
       <p class="entry-text">Eu fazendo uma das receitas que você me ensinou: pizza de portuguesa e de coração.</p>
+    </div>
+  </section>
+
+
+  <!-- MORRO DO MACACO -->
+  <section class="entry entry--left" data-date="23 ago 2025">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="42_2025-08-23_morro-do-macaco.webp" alt="Nós duas no Morro do Macaco" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">23 de agosto de 2025</span>
+      <h2 class="entry-title">subimos o morro do macaco</h2>
+      <p class="entry-text">Calor, subida, óculos escuros e o mar inteiro lá atrás. Cansadas e sorrindo — do jeito que várias das nossas melhores fotos acabaram sendo.</p>
     </div>
   </section>
 
@@ -566,6 +709,35 @@ img{ max-width:100%; display:block; }
       <span class="entry-date">2 de fevereiro de 2026</span>
       <h2 class="entry-title">você e o nosso gatinho</h2>
       <p class="entry-text">Um ano e meio depois do começo, e essa já era simplesmente a nossa vida.</p>
+    </div>
+  </section>
+
+
+  <!-- FORMATURA -->
+  <section class="entry entry--left entry--milestone" data-date="07 mar 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="43_2026-03-07_formatura.webp" alt="Sua formatura" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">7 de março de 2026</span>
+      <h2 class="entry-title">sua formatura</h2>
+      <p class="entry-text">Te ver chegando até ali e poder estar do teu lado naquele dia foi especial. Eu estava muito orgulhosa de você — e muito feliz por viver aquilo junto.</p>
+    </div>
+  </section>
+
+  <!-- POUSADA -->
+  <section class="entry entry--right" data-date="18 abr 2026">
+    <div class="entry-photo">
+      <div class="photo-frame">
+        <img src="44_2026-04-18_pousada.webp" alt="Fim de semana na pousada" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">18 de abril de 2026</span>
+      <h2 class="entry-title">um fim de semana na pousada</h2>
+      <p class="entry-text">Piscina, verde, mar e um pouco de distância da rotina. Eu gostava desses dias em que parecia que a gente tinha escapado do resto do mundo por um tempo.</p>
     </div>
   </section>
 
@@ -754,6 +926,29 @@ img{ max-width:100%; display:block; }
       <span class="entry-date">20 de agosto de 2026</span>
       <h2 class="entry-title">almoçando com o meu pai, de novo</h2>
       <p class="entry-text">Note que estou com o shorts de academia na foto hehe.</p>
+    </div>
+  </section>
+
+  <!-- RISOTO EM FAMILIA 23 AGO -->
+  <section class="entry entry--right entry--milestone" data-date="23 ago 2026">
+    <div class="entry-photo entry-photo--quad">
+      <div class="photo-frame">
+        <img src="45_2026-08-23_risoto-prep.webp" alt="Preparando o almoço em família" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="46_2026-08-23_risoto-fogao.webp" alt="Preparando o risoto no fogão" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="47_2026-08-23_risoto-pronto.webp" alt="Risoto pronto" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+      <div class="photo-frame">
+        <img src="48_2026-08-23_risoto-familia.webp" alt="Almoço em família com o risoto" onerror="this.closest('.photo-frame').classList.add('missing')">
+      </div>
+    </div>
+    <div class="entry-card">
+      <span class="entry-date">23 de agosto de 2026</span>
+      <h2 class="entry-title">risoto pra família</h2>
+      <p class="entry-text">Passei a manhã na cozinha, fiz o risoto do começo ao fim e depois sentei à mesa com todo mundo. Parece uma coisa pequena, mas naquele momento também era isso: voltar a fazer, cuidar, dividir e perceber que a vida continuava acontecendo.</p>
     </div>
   </section>
 
